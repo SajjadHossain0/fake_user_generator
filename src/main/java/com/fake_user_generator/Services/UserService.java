@@ -23,23 +23,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public String generateIdentifierFromData(String name, String phone, String address) {
-        String data = name + phone + address;
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(data.getBytes(StandardCharsets.UTF_8));
-            StringBuilder hexString = new StringBuilder();
-            for (int i = 0; i < 16; i++) {
-                String hex = Integer.toHexString(0xff & hash[i]);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error generating identifier", e);
-        }
-    }
-
     public List<User> generateFakeUsers(int count, String region, int errorPerRecord, long seed) {
         Faker faker = new Faker(new Random(seed));
         List<User> users = new ArrayList<>();
@@ -60,9 +43,22 @@ public class UserService {
         return userRepository.saveAll(users);
     }
 
-    private String generatedIdentifier(Faker faker){
-        //  128-bit  UUIDs
-        return UUID.randomUUID().toString();
+    // generating ids directly from  data (names, phones, address) using some hash.
+    public String generateIdentifierFromData(String name, String phone, String address) {
+        String data = name + phone + address;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(data.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+            for (int i = 0; i < 16; i++) {
+                String hex = Integer.toHexString(0xff & hash[i]);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error generating identifier", e);
+        }
     }
     private String generatedName(Faker faker){
         return faker.name().firstName()+" "

@@ -12,8 +12,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -39,6 +37,4 @@ public class UserController {
         }
         return "index";
     }
-
-
 }
