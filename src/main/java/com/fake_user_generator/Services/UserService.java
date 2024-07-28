@@ -62,13 +62,12 @@ public class UserService {
         return faker.phoneNumber().phoneNumber();
     }
     private String applyErrors(String data, int errorPerRecord, Random random) {
-        // Ensure data is non-empty and errorPerRecord is positive
+
         if (errorPerRecord <= 0 || data.length() == 0) {
             return data; // No errors to apply
         }
 
-        // Ensure error count does not exceed a sensible limit (e.g., length of the data)
-        int errorCount = Math.min(errorPerRecord, data.length() / 2); // Apply errors only up to half the length of data
+        int errorCount = Math.min(errorPerRecord, data.length() / 2);
         StringBuilder sb = new StringBuilder(data);
 
         for (int i = 0; i < errorCount; i++) {
